@@ -24,6 +24,10 @@ app.use(
   })
 );
 
+/******************* */
+/* TICKETS ENDPOINTS */
+/******************* */
+
 app.get("/tickets", async (req, res) => {
   const result = await pg.select(["uuid", "summary", "requirements", "assigner", "assignee", "deadline", "organisation_id", "created_at"]).from("tickets");
   res.json({
@@ -78,6 +82,17 @@ app.delete("/deleteTicket", (req, res) => {
   res.sendStatus(200);
 });
 
+/************************* */
+/* ORGANISATIONS ENDPOINTS */
+/************************* */
+
+app.get("/organisations", async (req, res) => {
+  const result = await pg.select(["uuid", "name", "created_at"]).from("organisations");
+  res.json({
+    res: result,
+  });
+});
+
 app.get("/organisation/:uuid", async (req, res) => {
   const result = await pg
     .select(["uuid", "name", "created_at"])
@@ -86,6 +101,38 @@ app.get("/organisation/:uuid", async (req, res) => {
   res.json({
     res: result,
   });
+});
+
+app.post("/postOrganisation", (req, res) => {
+  let uuid = Helpers.generateUUID();
+  pg.insert({
+    uuid: uuid,
+    name: req.body.name,
+    created_at: new Date(),
+  })
+    .into("organisations")
+    .then(() => {
+      res.json({ uuid: uuid });
+    });
+});
+
+app.patch("/updateOrganisation/:uuid", async (req, res) => {
+  pg('organisations')
+    .where({uuid: req.params.uuid})
+    .update(req.body)
+    .then(() => {
+      res.sendStatus(200);
+    })
+});
+
+app.delete("/deleteOrganisation", (req, res) => {
+  if (!req.body.uuid) {
+    res.status(400).send();
+  }
+  pg('organisations')
+    .where({ uuid: req.body.uuid })
+    .del();
+  res.sendStatus(200);
 });
 
 DatabaseHelper.initialiseTables();

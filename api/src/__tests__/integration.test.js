@@ -26,7 +26,6 @@ describe("Create, find and update ticket", () => {
             "Update footer copyright to 2021"
           ],
           assigner: "Tim Willaert",
-          assignee: undefined,
           deadline: "11/01/2021",
           organisation_id: 1
        });

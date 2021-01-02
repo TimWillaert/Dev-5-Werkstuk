@@ -75,11 +75,14 @@ app.patch("/updateTicket/:uuid", async (req, res) => {
 app.delete("/deleteTicket", (req, res) => {
   if (!req.body.uuid) {
     res.status(400).send();
+  } else{
+    pg('tickets')
+      .where({ uuid: req.body.uuid })
+      .del()
+      .then(() => {
+        res.sendStatus(200);
+    })
   }
-  pg('tickets')
-    .where({ uuid: req.body.uuid })
-    .del();
-  res.sendStatus(200);
 });
 
 /************************* */
@@ -128,11 +131,14 @@ app.patch("/updateOrganisation/:uuid", async (req, res) => {
 app.delete("/deleteOrganisation", (req, res) => {
   if (!req.body.uuid) {
     res.status(400).send();
+  } else{
+    pg('organisations')
+      .where({ uuid: req.body.uuid })
+      .del()
+      .then(() => {
+        res.sendStatus(200);
+    })
   }
-  pg('organisations')
-    .where({ uuid: req.body.uuid })
-    .del();
-  res.sendStatus(200);
 });
 
 DatabaseHelper.initialiseTables();

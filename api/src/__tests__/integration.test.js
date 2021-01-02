@@ -2,49 +2,64 @@ const supertest = require("supertest");
 const app = require("../server");
 const request = supertest(app);
 
-describe("GET /test", () => {
-  test("responds with 200", async (done) => {
+describe("GET /tickets", () => {
+  it("responds with 200 and returns all tickets", async (done) => {
     try {
-      await request.get("/test").expect(200, done());
-    } catch (error) {}
-  });
-});
-
-describe("GET /", () => {
-  it("responds", async (done) => {
-    try {
-      const response = await request.get("/");
+      const response = await request.get("/tickets");
       expect(response.status).toBe(200);
       expect(typeof response.body).toBe("object", done());
     } catch (error) {}
   });
 });
 
-describe("POST /postStoryblock", () => {
+describe("Create, find and update ticket", () => {
   let uuid;
-  it("responds with 400 if record is added to db", async (done) => {
+  it("responds with 200 if ticket is added to db", async (done) => {
     try {
       const response = await request
-        .post("/postStoryblock")
-        .send({ content: "Harry Potter" });
-      expect(response.status).toBe(400, done());
-      uuid = respone.body.uuid;
+        .post("/postTicket")
+        .send({ 
+          summary: "We need to update the visuals of our website",
+          requirements: [
+            "Update landing page banner image",
+            "Update color scheme to new branding",
+            "Update footer copyright to 2021"
+          ],
+          assigner: "Tim Willaert",
+          assignee: undefined,
+          deadline: "11/01/2021",
+          organisation_id: 1
+       });
+      expect(response.status).toBe(200);
+      uuid = response.body.uuid;
+      done();
     } catch (error) {}
   });
   it("finds the recently added record in db", async (done) => {
     try {
-      const response = await request.get("/storyblock/" + uuid);
+      const response = await request.get("/ticket/" + uuid);
       expect(response.status).toBe(200);
-      expect(typeof response.body).toBe("object", done());
+      expect(typeof response.body).toBe("object");
+      done();
     } catch (error) {}
   });
+  it("responds with 200 if ticket is updated", async (done) => {
+    try {
+      const response = await request
+        .patch("/updateTicket/" + uuid)
+        .send({deadline: "13/01/2021"});
+      expect(response.status).toBe(200);
+      done();
+    } catch (error) {}
+  })
 });
 
-describe("DELETE /deleteStory", () => {
-  it("responds with 404 if no uuid is provided", async (done) => {
+describe("DELETE /deleteTicket", () => {
+  it("responds with 400 if no uuid is provided", async (done) => {
     try {
-      const response = await request.delete("/deleteStory").send({});
-      expect(response.status).toBe(404, done());
+      const response = await request.delete("/deleteTicket").send({});
+      expect(response.status).toBe(400);
+      done();
     } catch (error) {}
   });
 });

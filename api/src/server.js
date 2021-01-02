@@ -24,60 +24,68 @@ app.use(
   })
 );
 
-app.get("/test", (req, res) => {
-  res.status(200).send();
-});
-
-app.get("/", async (req, res) => {
-  const result = await pg.select(["uuid", "title", "created_at"]).from("story");
+app.get("/tickets", async (req, res) => {
+  const result = await pg.select(["uuid", "summary", "requirements", "assigner", "assignee", "deadline", "organisation_id", "created_at"]).from("tickets");
   res.json({
     res: result,
   });
 });
 
-app.get("/story/:uuid", async (req, res) => {
+app.get("/ticket/:uuid", async (req, res) => {
   const result = await pg
-    .select(["uuid", "title", "created_at"])
-    .from("story")
+    .select(["uuid", "summary", "requirements", "assigner", "assignee", "deadline", "organisation_id", "created_at"])
+    .from("tickets")
     .where({ uuid: req.params.uuid });
   res.json({
     res: result,
   });
 });
 
-app.get("/storyblock/:uuid", async (req, res) => {
-  const result = await pg
-    .select(["uuid", "content", "created_at"])
-    .from("storyblock")
-    .where({ uuid: req.params.uuid });
-  res.json({
-    res: result,
-  });
-});
-
-app.post("/postStoryblock", (req, res) => {
+app.post("/postTicket", (req, res) => {
   let uuid = Helpers.generateUUID();
   pg.insert({
     uuid: uuid,
-    content: req.body.content,
+    summary: req.body.summary,
+    requirements: req.body.requirements,
+    assigner: req.body.assigner,
+    assignee: req.body.assignee,
+    deadline: req.body.deadline,
+    organisation_id: req.body.organisation_id,
     created_at: new Date(),
   })
-    .into("storyblock")
+    .into("tickets")
     .then(() => {
       res.json({ uuid: uuid });
     });
 });
 
-app.delete("/deleteStory", (req, res) => {
+app.patch("/updateTicket/:uuid", async (req, res) => {
+  pg('tickets')
+    .where({uuid: req.params.uuid})
+    .update(req.body)
+    .then(() => {
+      res.sendStatus(200);
+    })
+});
+
+app.delete("/deleteTicket", (req, res) => {
   if (!req.body.uuid) {
-    res.status(404).send();
+    res.status(400).send();
   }
-  //res.json({ uuid: req.body.uuid });
-  // pg.where({ uuid: req.params.uuid })
-  //   .del()
-  //   .then(() => {
-  //     res.status(69).send();
-  //   });
+  pg('tickets')
+    .where({ uuid: req.body.uuid })
+    .del();
+  res.sendStatus(200);
+});
+
+app.get("/organisation/:uuid", async (req, res) => {
+  const result = await pg
+    .select(["uuid", "name", "created_at"])
+    .from("organisations")
+    .where({ uuid: req.params.uuid });
+  res.json({
+    res: result,
+  });
 });
 
 DatabaseHelper.initialiseTables();

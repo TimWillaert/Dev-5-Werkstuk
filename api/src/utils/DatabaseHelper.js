@@ -1,3 +1,5 @@
+const Helpers = require("../utils/helpers.js");
+
 const pg = require("knex")({
     client: "pg",
     version: "9.6",
@@ -16,7 +18,7 @@ const DatabaseHelper = {
                 table.increments();
                 table.uuid("uuid");
                 table.string("summary");
-                table.json("requirements");
+                table.specificType("requirements", "text ARRAY");
                 table.string("assigner");
                 table.string("assignee");
                 table.string("deadline");
@@ -26,6 +28,8 @@ const DatabaseHelper = {
               .then(async () => {
                 console.log("created table tickets");
               });
+          } else{
+              console.log("tickets table already exists");
           }
         });
         await pg.schema.hasTable("organisations").then(async (exists) => {
@@ -45,7 +49,10 @@ const DatabaseHelper = {
                     .table("organisations")
                     .insert({ uuid, name: `Organisation ${i}`});
                 }
+                console.log("inserted dummy organisations");
               });
+          } else{
+              console.log("organisations table already exists");
           }
         });
     }

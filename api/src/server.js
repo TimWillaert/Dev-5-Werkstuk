@@ -2,8 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const http = require("http");
 const Helpers = require("./utils/helpers.js");
-
-const port = 3000;
+const DatabaseHelper = require("./utils/DatabaseHelper.js");
 
 const pg = require("knex")({
   client: "pg",
@@ -25,101 +24,123 @@ app.use(
   })
 );
 
-app.get("/test", (req, res) => {
-  res.status(200).send();
-});
+/******************* */
+/* TICKETS ENDPOINTS */
+/******************* */
 
-app.get("/", async (req, res) => {
-  const result = await pg.select(["uuid", "title", "created_at"]).from("story");
+app.get("/tickets", async (req, res) => {
+  const result = await pg.select(["uuid", "summary", "requirements", "assigner", "assignee", "deadline", "organisation_id", "created_at"]).from("tickets");
   res.json({
     res: result,
   });
 });
 
-app.get("/story/:uuid", async (req, res) => {
+app.get("/ticket/:uuid", async (req, res) => {
   const result = await pg
-    .select(["uuid", "title", "created_at"])
-    .from("story")
+    .select(["uuid", "summary", "requirements", "assigner", "assignee", "deadline", "organisation_id", "created_at"])
+    .from("tickets")
     .where({ uuid: req.params.uuid });
   res.json({
     res: result,
   });
 });
 
-app.get("/storyblock/:uuid", async (req, res) => {
-  const result = await pg
-    .select(["uuid", "content", "created_at"])
-    .from("storyblock")
-    .where({ uuid: req.params.uuid });
-  res.json({
-    res: result,
-  });
-});
-
-app.post("/postStoryblock", (req, res) => {
+app.post("/postTicket", (req, res) => {
   let uuid = Helpers.generateUUID();
   pg.insert({
     uuid: uuid,
-    content: req.body.content,
+    summary: req.body.summary,
+    requirements: req.body.requirements,
+    assigner: req.body.assigner,
+    assignee: req.body.assignee,
+    deadline: req.body.deadline,
+    organisation_id: req.body.organisation_id,
     created_at: new Date(),
   })
-    .into("storyblock")
+    .into("tickets")
     .then(() => {
       res.json({ uuid: uuid });
     });
 });
 
-app.delete("/deleteStory", (req, res) => {
-  if (!req.body.uuid) {
-    res.status(404).send();
-  }
-  //res.json({ uuid: req.body.uuid });
-  // pg.where({ uuid: req.params.uuid })
-  //   .del()
-  //   .then(() => {
-  //     res.status(69).send();
-  //   });
+app.patch("/updateTicket/:uuid", async (req, res) => {
+  pg('tickets')
+    .where({uuid: req.params.uuid})
+    .update(req.body)
+    .then(() => {
+      res.sendStatus(200);
+    })
 });
 
-async function initialiseTables() {
-  await pg.schema.hasTable("storyblock").then(async (exists) => {
-    if (!exists) {
-      await pg.schema
-        .createTable("storyblock", (table) => {
-          table.increments();
-          table.uuid("uuid");
-          table.string("content");
-          table.string("story_id");
-          table.integer("order");
-          table.timestamps(true, true);
-        })
-        .then(async () => {
-          console.log("created table storyblock");
-        });
-    }
+app.delete("/deleteTicket", (req, res) => {
+  if (!req.body.uuid) {
+    res.status(400).send();
+  } else{
+    pg('tickets')
+      .where({ uuid: req.body.uuid })
+      .del()
+      .then(() => {
+        res.sendStatus(200);
+    })
+  }
+});
+
+/************************* */
+/* ORGANISATIONS ENDPOINTS */
+/************************* */
+
+app.get("/organisations", async (req, res) => {
+  const result = await pg.select(["uuid", "name", "created_at"]).from("organisations");
+  res.json({
+    res: result,
   });
-  await pg.schema.hasTable("story").then(async (exists) => {
-    if (!exists) {
-      await pg.schema
-        .createTable("story", (table) => {
-          table.increments();
-          table.uuid("uuid");
-          table.string("title");
-          table.string("summary");
-          table.timestamps(true, true);
-        })
-        .then(async () => {
-          console.log("created table story");
-          for (let i = 0; i < 10; i++) {
-            const uuid = Helpers.generateUUID();
-            await pg
-              .table("story")
-              .insert({ uuid, title: `random element number ${i}` });
-          }
-        });
-    }
+});
+
+app.get("/organisation/:uuid", async (req, res) => {
+  const result = await pg
+    .select(["uuid", "name", "created_at"])
+    .from("organisations")
+    .where({ uuid: req.params.uuid });
+  res.json({
+    res: result,
   });
-}
-initialiseTables();
+});
+
+app.post("/postOrganisation", (req, res) => {
+  let uuid = Helpers.generateUUID();
+  pg.insert({
+    uuid: uuid,
+    name: req.body.name,
+    created_at: new Date(),
+  })
+    .into("organisations")
+    .then(() => {
+      res.json({ uuid: uuid });
+    });
+});
+
+app.patch("/updateOrganisation/:uuid", async (req, res) => {
+  pg('organisations')
+    .where({uuid: req.params.uuid})
+    .update(req.body)
+    .then(() => {
+      res.sendStatus(200);
+    })
+});
+
+app.delete("/deleteOrganisation", (req, res) => {
+  if (!req.body.uuid) {
+    res.status(400).send();
+  } else{
+    pg('organisations')
+      .where({ uuid: req.body.uuid })
+      .del()
+      .then(() => {
+        res.sendStatus(200);
+    })
+  }
+});
+
+DatabaseHelper.initialiseTables();
 
 module.exports = app;

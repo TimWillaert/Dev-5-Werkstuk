@@ -85,5 +85,6 @@ After having worked **on your own branch**, you might want to open a pull reques
 
 ## Roadmap
 
-- Add a user table and complete authentication and authorisation.
-- Add comments to functions and endpoints.
+- Add a user table and authorisation to the endpoints.
+- Validate input in endpoints.
+- Add documentation/comments to functions and endpoints.

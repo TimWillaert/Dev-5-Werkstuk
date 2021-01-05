@@ -9,7 +9,7 @@
 - [How it works](#how-it-works)
     - [Tickets table](#tickets-table)
     - [Organisations table](#organisations-table)
-- [Status and roadmap](#status-and-roadmap)
+- [Status and roadmap](#project-status)
 - [Authors](#authors)
 - [FAQ](#faq)
 
@@ -124,7 +124,7 @@ You can modify this table by using the following endpoints:
         ```
 
 ---
-## Status and Roadmap
+## Project Status
 
 This project is in development.
 

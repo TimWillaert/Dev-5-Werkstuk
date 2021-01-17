@@ -2,7 +2,14 @@
 
 ---
 
-## 1.0.3
+## 1.0.4
+
+Features:
+- API routes parameter validation
+
+---
+
+### 1.0.3
 
 Features:
 - checkParameters function

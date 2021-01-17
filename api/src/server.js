@@ -45,7 +45,7 @@ app.get("/ticket/:uuid", async (req, res) => {
   });
 });
 
-app.post("/postTicket", (req, res) => {
+app.post("/ticket", (req, res) => {
   let uuid = Helpers.generateUUID();
   pg.insert({
     uuid: uuid,
@@ -63,7 +63,7 @@ app.post("/postTicket", (req, res) => {
     });
 });
 
-app.patch("/updateTicket/:uuid", async (req, res) => {
+app.patch("/ticket/:uuid", async (req, res) => {
   pg('tickets')
     .where({uuid: req.params.uuid})
     .update(req.body)
@@ -72,7 +72,7 @@ app.patch("/updateTicket/:uuid", async (req, res) => {
     })
 });
 
-app.delete("/deleteTicket", (req, res) => {
+app.delete("/ticket", (req, res) => {
   if (!req.body.uuid) {
     res.status(400).send();
   } else{
@@ -106,7 +106,7 @@ app.get("/organisation/:uuid", async (req, res) => {
   });
 });
 
-app.post("/postOrganisation", (req, res) => {
+app.post("/organisation", (req, res) => {
   let uuid = Helpers.generateUUID();
   pg.insert({
     uuid: uuid,
@@ -119,7 +119,7 @@ app.post("/postOrganisation", (req, res) => {
     });
 });
 
-app.patch("/updateOrganisation/:uuid", async (req, res) => {
+app.patch("/organisation/:uuid", async (req, res) => {
   pg('organisations')
     .where({uuid: req.params.uuid})
     .update(req.body)
@@ -128,7 +128,7 @@ app.patch("/updateOrganisation/:uuid", async (req, res) => {
     })
 });
 
-app.delete("/deleteOrganisation", (req, res) => {
+app.delete("/organisation", (req, res) => {
   if (!req.body.uuid) {
     res.status(400).send();
   } else{

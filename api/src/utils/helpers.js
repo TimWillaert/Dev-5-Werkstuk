@@ -1,9 +1,43 @@
 const { v1: uuidv1 } = require("uuid");
+const sortObject = require('sort-object-keys');
+const { all } = require("../server");
 
 const Helpers = {
   generateUUID: () => {
     const uuid = uuidv1();
     return uuid;
+  },
+
+  checkParameters: (expectedParameters, givenParameters, allowOtherParameters) => {
+    if(
+      typeof expectedParameters == "object" &&
+      typeof givenParameters == "object" &&
+      typeof allowOtherParameters == "boolean"
+    ) {
+      let sortedExpectedParams = sortObject(expectedParameters);
+      let sortedGivenParams = sortObject(givenParameters);
+      let matchingParameters = 0;
+      for(const requiredParam in sortedExpectedParams){
+        if(
+          requiredParam in sortedGivenParams &&
+          typeof sortedGivenParams[requiredParam] == expectedParameters[requiredParam]
+        ) {
+          matchingParameters++;
+        }
+      }
+      if(Object.keys(sortedGivenParams).length > matchingParameters && allowOtherParameters == false){
+        return false;
+      } else if(Object.keys(sortedGivenParams).length > matchingParameters && allowOtherParameters == true){
+        return true;
+      } else if(matchingParameters < Object.keys(sortedExpectedParams).length){
+        return false;
+      } else if(matchingParameters == Object.keys(sortedExpectedParams).length){
+        return true;
+      } else{
+        return false;
+      }
+    }
+    return 400;
   },
 
   /*

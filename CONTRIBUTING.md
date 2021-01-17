@@ -34,27 +34,28 @@ If you have a suggestion for a new feature, please follow these steps:
 ## Environment and Testing
 To set up your development environment, please follow these steps:
 1. Clone this repository.
-2. Boot up the Docker container by navigating to the root folder and running the following commands:
+2. This project uses **GitHub Flow** to keep the repo neat, tidy and clean. It's a rather small project so something more extensive like Git Flow feels like overkill. Make sure to always create a new branch with a descriptive title.
+3. Boot up the Docker container by navigating to the root folder and running the following commands:
     ```shell
     docker-compose build
     docker-compose up
     ```
     If you are unfamiliar with Docker or are encountering issues, please refer to [the Docker documentation](https://docs.docker.com/).
-3. If packages seem to be missing, run a clean npm install:
+4. If packages seem to be missing, run a clean npm install:
     ```shell
     npm ci
     ```
-4. To run tests, navigate to the api folder.
+5. To run tests, navigate to the api folder.
     ```shell
     npm test
     ```
-5. If you changed any of the code, make sure all the tests are still passing.
-6. If you added new endpoints or made any significant changes, please add new tests to make sure everything works correctly.
+6. If you changed any of the code, make sure all the tests are still passing.
+7. If you added new endpoints or made any significant changes, please add new tests to make sure everything works correctly.
     - Test files are located in */api/src/__ tests __*
     - Tests are written with Jest. If you are unfamiliar with Jest or are encountering issues, please refer to [the Jest documentation](https://jestjs.io/docs/en/getting-started).
     - Add your tests in a new test file to keep everything clean and organised.
     - Please provide clear descriptions of your tests.
-7. To have a good overview of your local database content, I recommend using a GUI tool such as [TablePlus](https://tableplus.com/). Once installed, follow these steps:
+8. To have a good overview of your local database content, I recommend using a GUI tool such as [TablePlus](https://tableplus.com/). Once installed, follow these steps:
     - Click on *Create a new connection*
     - From the list, select *PostgreSQL*
     - Pick any name, color and tag you like

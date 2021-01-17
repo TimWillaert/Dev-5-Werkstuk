@@ -8,7 +8,7 @@ describe("end to end test", () => {
     it("creates an organisation", async (done) => {
         try {
             const response = await request
-                .post("/postOrganisation")
+                .post("/organisation")
                 .send({
                     name: "Erasmushogeschool Brussel"
                 });
@@ -20,7 +20,7 @@ describe("end to end test", () => {
     it("updates the organisation", async (done) => {
         try {
             const response = await request
-                .patch("/updateOrganisation/" + organisationID)
+                .patch("/organisation/" + organisationID)
                 .send({name: "EhB"});
             expect(response.status).toBe(200);
             done();
@@ -29,7 +29,7 @@ describe("end to end test", () => {
     it("creates a ticket", async (done) => {
         try {
             const response = await request
-                .post("/postTicket")
+                .post("/ticket")
                 .send({ 
                 summary: "We need to update the visuals of our website",
                 requirements: [
@@ -50,7 +50,7 @@ describe("end to end test", () => {
     it("assigns a developer to ticket", async (done) => {
         try {
             const response = await request
-                .patch("/updateTicket/" + ticketID)
+                .patch("/ticket/" + ticketID)
                 .send({assignee: "Chiel Habils"});
             expect(response.status).toBe(200);
             done();
@@ -59,7 +59,7 @@ describe("end to end test", () => {
     it("marks the ticket as complete", async (done) => {
         try {
             const response = await request
-                .patch("/updateTicket/" + ticketID)
+                .patch("/ticket/" + ticketID)
                 .send({completed: true});
             expect(response.status).toBe(200);
             done();
@@ -68,7 +68,7 @@ describe("end to end test", () => {
     it("deletes the ticket", async (done) => {
         try {
             const response = await request
-                .delete("/deleteTicket")
+                .delete("/ticket")
                 .send({uuid: ticketID});
             expect(response.status).toBe(200);
             done();
@@ -77,7 +77,7 @@ describe("end to end test", () => {
     it("deletes the organisation", async (done) => {
         try {
             const response = await request
-                .delete("/deleteOrganisation")
+                .delete("/organisation")
                 .send({uuid: organisationID});
             expect(response.status).toBe(200);
             done();

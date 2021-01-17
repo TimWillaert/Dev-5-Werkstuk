@@ -17,7 +17,7 @@ describe("Create, find and update ticket", () => {
   it("responds with 200 if ticket is added to db", async (done) => {
     try {
       const response = await request
-        .post("/postTicket")
+        .post("/ticket")
         .send({ 
           summary: "We need to update the visuals of our website",
           requirements: [
@@ -45,7 +45,7 @@ describe("Create, find and update ticket", () => {
   it("responds with 200 if ticket is updated", async (done) => {
     try {
       const response = await request
-        .patch("/updateTicket/" + uuid)
+        .patch("/ticket/" + uuid)
         .send({deadline: "13/01/2021"});
       expect(response.status).toBe(200);
       done();
@@ -56,7 +56,7 @@ describe("Create, find and update ticket", () => {
 describe("DELETE /deleteTicket", () => {
   it("responds with 400 if no uuid is provided", async (done) => {
     try {
-      const response = await request.delete("/deleteTicket").send({});
+      const response = await request.delete("/ticket").send({});
       expect(response.status).toBe(400);
       done();
     } catch (error) {}

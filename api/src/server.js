@@ -29,6 +29,11 @@ app.use(
 /* TICKETS ENDPOINTS */
 /******************* */
 
+/**
+* GET /tickets
+* @param: none
+* @returns: all ticket records from the database
+*/
 app.get("/tickets", async (req, res) => {
   const result = await pg
     .select(["uuid", "summary", "requirements", "completed", "assigner", "assignee", "deadline", "organisation_id", "created_at"])
@@ -36,6 +41,11 @@ app.get("/tickets", async (req, res) => {
   res.status(200).send(result);
 });
 
+/**
+* GET /ticket/uuid
+* @param: uuid
+* @returns: a specific ticket record from the database by uuid
+*/
 app.get("/ticket/:uuid", async (req, res) => {
   const result = await pg
     .select(["uuid", "summary", "requirements", "completed", "assigner", "assignee", "deadline", "organisation_id", "created_at"])
@@ -48,6 +58,11 @@ app.get("/ticket/:uuid", async (req, res) => {
   }
 });
 
+/**
+* POST /ticket
+* @param: {uuid, summary, requirements, assigner, assignee, deadline, organisation_id}
+* @returns: TODO
+*/
 app.post("/ticket", (req, res) => {
   let uuid = Helpers.generateUUID();
   pg.insert({
@@ -66,6 +81,11 @@ app.post("/ticket", (req, res) => {
     });
 });
 
+/**
+* PATCH /ticket/:uuid
+* @param: object with the properties that need to be updated/patched
+* @returns: TODO
+*/
 app.patch("/ticket/:uuid", async (req, res) => {
   pg('tickets')
     .where({uuid: req.params.uuid})
@@ -75,6 +95,11 @@ app.patch("/ticket/:uuid", async (req, res) => {
     })
 });
 
+/**
+* DELETE /ticket
+* @param: {uuid}
+* @returns: TODO
+*/
 app.delete("/ticket", (req, res) => {
   if (!req.body.uuid) {
     res.status(400).send();
@@ -92,6 +117,11 @@ app.delete("/ticket", (req, res) => {
 /* ORGANISATIONS ENDPOINTS */
 /************************* */
 
+/**
+* GET /organisations
+* @param: none
+* @returns: all organisation records from the database
+*/
 app.get("/organisations", async (req, res) => {
   const result = await pg.select(["uuid", "name", "created_at"]).from("organisations");
   res.sendStatus(200);
@@ -100,6 +130,11 @@ app.get("/organisations", async (req, res) => {
   });
 });
 
+/**
+* GET /organisation/uuid
+* @param: uuid
+* @returns: a specific organisation record from the database by uuid
+*/
 app.get("/organisation/:uuid", async (req, res) => {
   const result = await pg
     .select(["uuid", "name", "created_at"])
@@ -112,6 +147,11 @@ app.get("/organisation/:uuid", async (req, res) => {
   }
 });
 
+/**
+* POST /organisation
+* @param: {uuid, name}
+* @returns: TODO
+*/
 app.post("/organisation", (req, res) => {
   let uuid = Helpers.generateUUID();
   pg.insert({
@@ -125,6 +165,11 @@ app.post("/organisation", (req, res) => {
     });
 });
 
+/**
+* PATCH /organisation/:uuid
+* @param: object with the properties that need to be updated/patched
+* @returns: TODO
+*/
 app.patch("/organisation/:uuid", async (req, res) => {
   pg('organisations')
     .where({uuid: req.params.uuid})
@@ -134,6 +179,11 @@ app.patch("/organisation/:uuid", async (req, res) => {
     })
 });
 
+/**
+* DELETE /organisation
+* @param: {uuid}
+* @returns: TODO
+*/
 app.delete("/organisation", (req, res) => {
   if (!req.body.uuid) {
     res.status(400).send();

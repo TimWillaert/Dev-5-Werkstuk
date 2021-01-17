@@ -26,11 +26,6 @@ const DatabaseHelper = {
                 table.string("organisation_id");
                 table.timestamps(true, true);
               })
-              .then(async () => {
-                console.log("created table tickets");
-              });
-          } else{
-              console.log("tickets table already exists");
           }
         });
         await pg.schema.hasTable("organisations").then(async (exists) => {
@@ -50,10 +45,7 @@ const DatabaseHelper = {
                     .table("organisations")
                     .insert({ uuid, name: `Organisation ${i}`});
                 }
-                console.log("inserted dummy organisations");
               });
-          } else{
-              console.log("organisations table already exists");
           }
         });
     }

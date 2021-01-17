@@ -11,24 +11,35 @@ describe("generateUUID test", () => {
   });
 });
 
-describe("lengthCheck test", () => {
-  test("check if lengthCheck() returns something", () => {
-    expect(Helpers.lengthCheck("Hey")).not.toBeUndefined();
-  });
-  test("check if lengthCheck() requires 1 argument", () => {
-    expect(Helpers.lengthCheck()).toBeUndefined();
-  });
-  test("check if lengthCheck() only accepts strings", () => {
-    expect(Helpers.lengthCheck([])).toBe(false);
-  });
-  test("check if lengthCheck() returns checks capital letter", () => {
-    expect(Helpers.lengthCheck("hey")).toBe(false);
-  });
-  test("check if lengthCheck() returns checks string length", () => {
-    expect(
-      Helpers.lengthCheck(
-        "HeyahHeyahHeyahHeyahHeyahHeyahHeyahHeyahHeyahHeyahHeyah"
-      )
-    ).toBe(false);
-  });
-});
+describe("checkParameters test", () => {
+  test("check if function returns something", () => {
+    expect(Helpers.checkParameters()).not.toBeUndefined();
+  })
+  test("check if function returns 400 when no parameters passed", () => {
+    expect(Helpers.checkParameters()).toBe(400);
+  })
+  test("check if function returns 400 when parameters are wrong types", () => {
+    expect(Helpers.checkParameters("hey", 0, {})).toBe(400);
+  })
+  test("check if function returns 400 when parameters are wrong types", () => {
+    expect(Helpers.checkParameters(undefined)).toBe(400);
+  })
+  test("check if function returns 400 when parameters are wrong types", () => {
+    expect(Helpers.checkParameters(null)).toBe(400);
+  })
+  test("check if function returns 400 when parameters are wrong types", () => {
+    expect(Helpers.checkParameters([])).toBe(400);
+  })
+  test("check if function returns false when parameters are right types but wrong values", () => {
+    expect(Helpers.checkParameters({hey: "hoi"}, {}, false)).toBe(false);
+  })
+  test("check if function returns false when parameters are right types but more parameters are not allowed", () => {
+    expect(Helpers.checkParameters({name: "string"}, {name: "Tim", surname: "Willaert"}, false)).toBe(false);
+  })
+  test("check if function returns true when parameters are right types and more parameters are allowed", () => {
+    expect(Helpers.checkParameters({name: "string"}, {name: "Tim", surname: "Willaert"}, true)).toBe(true);
+  })
+  test("check if function returns true when parameters are right values", () => {
+    expect(Helpers.checkParameters({name: "string"}, {name: "Tim"}, false)).toBe(true);
+  })
+})

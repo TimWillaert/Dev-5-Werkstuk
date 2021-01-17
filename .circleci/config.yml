@@ -8,4 +8,4 @@ jobs:
     steps:
       - checkout
       - run: cd api && npm ci
-      - run: cd api && npm run test-ci
+      - run: cd api && npm run test

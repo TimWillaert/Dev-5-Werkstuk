@@ -3,6 +3,7 @@ const bodyParser = require("body-parser");
 const http = require("http");
 const Helpers = require("./utils/helpers.js");
 const DatabaseHelper = require("./utils/DatabaseHelper.js");
+const { send } = require("process");
 
 const pg = require("knex")({
   client: "pg",
@@ -29,20 +30,22 @@ app.use(
 /******************* */
 
 app.get("/tickets", async (req, res) => {
-  const result = await pg.select(["uuid", "summary", "requirements", "assigner", "assignee", "deadline", "organisation_id", "created_at"]).from("tickets");
-  res.json({
-    res: result,
-  });
+  const result = await pg
+    .select(["uuid", "summary", "requirements", "completed", "assigner", "assignee", "deadline", "organisation_id", "created_at"])
+    .from("tickets");
+  res.status(200).send(result);
 });
 
 app.get("/ticket/:uuid", async (req, res) => {
   const result = await pg
-    .select(["uuid", "summary", "requirements", "assigner", "assignee", "deadline", "organisation_id", "created_at"])
+    .select(["uuid", "summary", "requirements", "completed", "assigner", "assignee", "deadline", "organisation_id", "created_at"])
     .from("tickets")
     .where({ uuid: req.params.uuid });
-  res.json({
-    res: result,
-  });
+  if(result.length == 0){
+    res.status(404).send("Ticket not found");
+  } else{
+    res.status(200).send(result[0]);
+  }
 });
 
 app.post("/ticket", (req, res) => {
@@ -91,8 +94,9 @@ app.delete("/ticket", (req, res) => {
 
 app.get("/organisations", async (req, res) => {
   const result = await pg.select(["uuid", "name", "created_at"]).from("organisations");
+  res.sendStatus(200);
   res.json({
-    res: result,
+    result
   });
 });
 
@@ -101,9 +105,11 @@ app.get("/organisation/:uuid", async (req, res) => {
     .select(["uuid", "name", "created_at"])
     .from("organisations")
     .where({ uuid: req.params.uuid });
-  res.json({
-    res: result,
-  });
+  if(result.length == 0){
+    res.status(404).send("Organisation not found");
+  } else{
+    res.status(200).send(result[0]);
+  }
 });
 
 app.post("/organisation", (req, res) => {

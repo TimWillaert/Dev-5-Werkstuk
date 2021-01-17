@@ -7,7 +7,8 @@ describe("GET /tickets", () => {
     try {
       const response = await request.get("/tickets");
       expect(response.status).toBe(200);
-      expect(typeof response.body).toBe("object", done());
+      expect(typeof response.body).toBe("object");
+      done();
     } catch (error) {}
   });
 });

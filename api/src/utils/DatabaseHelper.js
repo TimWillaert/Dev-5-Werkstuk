@@ -17,7 +17,7 @@ const DatabaseHelper = {
               .createTable("tickets", (table) => {
                 table.increments();
                 table.uuid("uuid");
-                table.boolean("completed");
+                table.boolean("completed").defaultTo(false);
                 table.string("summary");
                 table.specificType("requirements", "text ARRAY");
                 table.string("assigner");

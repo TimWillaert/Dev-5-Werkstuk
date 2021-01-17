@@ -1,13 +1,30 @@
 const { v1: uuidv1 } = require("uuid");
 const sortObject = require('sort-object-keys');
-const { all } = require("../server");
 
 const Helpers = {
+  /**
+  * generateUUID generates a v1 UUID
+  * @param: none
+  * @returns: v1 UUID
+  */
   generateUUID: () => {
     const uuid = uuidv1();
     return uuid;
   },
 
+  /**
+  * checkParameters checks if all expected parameters are present and of the right type
+  * @param:
+  * - expectedParameters: object (list of expected properties and their type)
+  *   - for example: {uuid: 'string', name: 'string'}
+  * - givenParameters: object (list of given parameters and their value)
+  *   - for example: {uuid: 'e89a4df0-58df-11eb-9bcd-e7a81d580945', name: 'Tim}
+  * - allowOtherParameters: boolean (allow more parameters to be present than the expected ones)
+  * @returns: 
+  * - 400 if not all 3 parameters are present or their types are wrong
+  * - true if all expected parameters are present and of the right type
+  * - false if not all expected parameters are present and/or of the wrong type
+  */
   checkParameters: (expectedParameters, givenParameters, allowOtherParameters) => {
     if(
       typeof expectedParameters == "object" &&
@@ -38,29 +55,6 @@ const Helpers = {
       }
     }
     return 400;
-  },
-
-  /*
-   * lengthCheck: function(string)
-   * Requirements:
-   *  - 1 param
-   *  - Param has to be of type string
-   *  - String has a limit of max 50 chars
-   *  - First letter of string must be uppercase
-   * Return true if all requirements pass
-   * Return undefined if no paramater was passed along
-   * Return false otherwise
-   */
-  lengthCheck: (inputString) => {
-    if (!inputString) return undefined;
-    if (
-      typeof inputString == "string" &&
-      inputString.length <= 50 &&
-      inputString.charAt(0) === inputString.charAt(0).toUpperCase()
-    ) {
-      return true;
-    }
-    return false;
   },
 };
 
